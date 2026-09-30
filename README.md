@@ -23,13 +23,32 @@
 
 ## Description
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+NestJS backend for programs, students, advisers, subjects, enrolments, and student remarks.
 
 ## Project setup
 
 ```bash
-$ npm install
+npm install
+npm run prisma:migrate
+npm run prisma:generate
+npm run seed
 ```
+
+Set `DATABASE_URL` to a PostgreSQL database before running Prisma commands.
+
+Request bodies are validated globally and unknown fields are removed.
+
+## API endpoints
+
+- `GET|POST /programs`, `GET|PATCH|DELETE /programs/:id`
+- `GET|POST /students`, `GET|PATCH|DELETE /students/:id`
+- `GET /students/remarks`, `GET /students/:id/remarks`, `POST /students/remarks`
+- `PATCH|PUT|DELETE /students/remarks/:id`
+- `GET|POST /subjects`, `GET /programs/:id/subjects`, `PATCH|DELETE /subjects/:id`
+- `GET|POST /enrolments`, `GET /students/:studentId/enrolments`
+- `PATCH|DELETE /enrolments/:id`
+
+The current adviser model assigns at most one adviser to each program through the unique `programId` field.
 
 ## Compile and run the project
 

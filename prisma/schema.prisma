@@ -13,6 +13,7 @@ model Program {
   code     String    @unique
   name     String
   students Student[]
+  subjects Subject[]
   adviser  Adviser?
 }
 
@@ -33,6 +34,7 @@ model Student {
 
   program    Program     @relation(fields: [programId], references: [id], onDelete: Cascade)
   enrolments Enrolment[]
+  remarks    Remark[]
 }
 
 model Enrolment {
@@ -46,4 +48,27 @@ model Enrolment {
   student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 
   @@unique([studentId, academicYear, semester])
+}
+
+model Subject {
+  id        Int    @id @default(autoincrement())
+  code      String @unique
+  title     String
+  units     Int
+  status    String
+  yearlevel Int
+  sem       Int
+  programId Int
+
+  program Program @relation(fields: [programId], references: [id], onDelete: Cascade)
+}
+
+model Remark {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  content   String
+  category  String   @default("uncategorized")
+  createdAt DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
 }

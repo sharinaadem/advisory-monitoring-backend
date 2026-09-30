@@ -21,6 +21,11 @@ export class StudentsService {
       where: { id },
       include: {
         program: true,
+        remarks: {
+          orderBy: {
+            createdAt: 'asc',
+          },
+        },
       },
     });
   }

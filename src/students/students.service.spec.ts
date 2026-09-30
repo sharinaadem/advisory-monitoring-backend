@@ -4,6 +4,11 @@ import { StudentsService } from './students.service.js';
 
 describe('StudentsService', () => {
   let service: StudentsService;
+  const prisma = {
+    student: {
+      findUnique: vi.fn(),
+    },
+  };
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -11,9 +16,7 @@ describe('StudentsService', () => {
         StudentsService,
         {
           provide: PrismaService,
-          useValue: {
-            student: {},
-          },
+          useValue: prisma,
         },
       ],
     }).compile();
@@ -23,5 +26,24 @@ describe('StudentsService', () => {
 
   it('should be defined', () => {
     expect(service).toBeDefined();
+  });
+
+  it('includes remarks ordered by creation date in student details', async () => {
+    const findUnique = vi.fn().mockResolvedValue({ id: 4, remarks: [] });
+    prisma.student.findUnique = findUnique;
+
+    await service.findOne(4);
+
+    expect(findUnique).toHaveBeenCalledWith({
+      where: { id: 4 },
+      include: {
+        program: true,
+        remarks: {
+          orderBy: {
+            createdAt: 'asc',
+          },
+        },
+      },
+    });
   });
 });
